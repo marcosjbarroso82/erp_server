@@ -17,7 +17,7 @@ class Order(BaseModel):
     status = models.IntegerField(choices=ORDER_STATUS_OPTIONS)
 
     # Transaction Saved Fields
-    total = models.DecimalField(editable=False)
+    total = models.DecimalField(decimal_places=2, max_digits=12, editable=False)
 
 
 class OrderItem(BaseModel):
@@ -27,4 +27,4 @@ class OrderItem(BaseModel):
 
     # Transaction Saved Fields
     product_name = models.CharField(max_length=20, editable=False)
-    price = models.DecimalField(editable=False)
+    price = models.DecimalField(decimal_places=2, max_digits=12, editable=False)

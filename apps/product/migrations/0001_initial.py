@@ -14,13 +14,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Client',
+            name='Product',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('first_name', models.CharField(max_length=20)),
+                ('name', models.CharField(max_length=20)),
+                ('price', models.DecimalField(decimal_places=2, max_digits=12)),
             ],
             options={
                 'abstract': False,

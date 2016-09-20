@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
+import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -10,17 +11,19 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('product', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Client',
+            name='ProductStock',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('first_name', models.CharField(max_length=20)),
+                ('quantity', models.IntegerField()),
+                ('item', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='product.Product')),
             ],
             options={
                 'abstract': False,
