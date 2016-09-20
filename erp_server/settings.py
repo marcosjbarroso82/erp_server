@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
 
-
     'apps.account_balance',
     'apps.client',
     'apps.core',
