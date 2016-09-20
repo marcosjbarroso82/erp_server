@@ -14,6 +14,3 @@ class Balance(BaseModel):
     ticket_type = models.ForeignKey(ContentType, related_name='balances')
     ticket_id = models.PositiveIntegerField()
     ticket = GenericForeignKey('ticket_type', 'ticket_id')
-
-
-
