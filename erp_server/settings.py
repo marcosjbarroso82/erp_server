@@ -50,7 +50,14 @@ INSTALLED_APPS = [
     'apps.stock',
     'apps.address',
     'apps.item_resource',
-    'apps.expenses',
+    'apps.expense',
+
+    'rest_framework',
+    'webpack_loader',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'rest_auth.registration',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
