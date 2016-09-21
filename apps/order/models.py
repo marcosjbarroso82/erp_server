@@ -7,9 +7,9 @@ from apps.product.models import Product
 ORDER_STATUS_OPTIONS = (
     (0, 'canceled'),
     (1, 'pending'),
-    (3, 'completed'),
-    (4, 'delivered'),
-    (5, 'paid'),
+    (2, 'completed'),
+    (3, 'delivered'),
+    (4, 'paid'),
 )
 
 class Order(BaseModel):
@@ -17,7 +17,7 @@ class Order(BaseModel):
     status = models.IntegerField(choices=ORDER_STATUS_OPTIONS)
 
     # Transaction Saved Fields
-    total = models.DecimalField(decimal_places=2, max_digits=12, editable=False)
+    total = models.DecimalField(decimal_places=2, max_digits=12, editable=False, default=0)
 
 
 class OrderItem(BaseModel):

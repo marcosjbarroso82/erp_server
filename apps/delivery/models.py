@@ -8,7 +8,7 @@ from apps.employee.models import Employee
 DELIVERY_STATUS_OPTIONS = (
     (0, 'canceled'),
     (1, 'pending'),
-    (3, 'completed')
+    (2, 'completed')
 )
 
 
