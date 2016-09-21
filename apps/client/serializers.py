@@ -32,9 +32,9 @@ class ClientSerializer(serializers.ModelSerializer):
             instance.address.street = address['street']
             instance.address.save()
 
-        if validated_data.get('first_name'):
-            instance.first_name = validated_data.get('first_name')
-
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
         instance.save()
+        
         return instance
 
