@@ -28,3 +28,11 @@ class OrderItem(BaseModel):
     # Transaction Saved Fields
     product_name = models.CharField(max_length=20, editable=False)
     price = models.DecimalField(decimal_places=2, max_digits=12, editable=False)
+
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.product_name = self.product.name
+            self.price = self.product.price
+
+        return super(OrderItem, self).save(*args, **kwargs)

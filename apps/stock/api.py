@@ -12,6 +12,7 @@ class ProductStockViewSet(viewsets.ModelViewSet):
     serializer_class = ProductStockSerializer
     filter_fields = ('item',)
     search_fields = ('item__name', 'item__sku')
+    http_method_names = ['get']
 
 
 class IOProductStockViewSet(viewsets.ModelViewSet):
@@ -22,6 +23,7 @@ class IOProductStockViewSet(viewsets.ModelViewSet):
     serializer_class = IOProductStockSerializer
     filter_fields = ('stock',)
     search_fields = ('stock__item__name', 'stock__item__sku')
+    http_method_names = ['get', 'post']
 
 
 class ItemResourceStockViewSet(viewsets.ModelViewSet):
@@ -32,6 +34,7 @@ class ItemResourceStockViewSet(viewsets.ModelViewSet):
     serializer_class = ItemResourceStockSerializer
     filter_fields = ('item',)
     search_fields = ('item__name', 'item__sku')
+    http_method_names = ['get']
 
 
 
@@ -43,6 +46,7 @@ class IOItemResourceStockViewSet(viewsets.ModelViewSet):
     serializer_class = IOItemResourceStockSerializer
     filter_fields = ('stock',)
     search_fields = ('stock__item__name', 'stock__item__sku')
+    http_method_names = ['get', 'post']
 
 
 
