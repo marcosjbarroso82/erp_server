@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'apps.address',
     'apps.item_resource',
     'apps.expense',
+    'apps.cart',
 
     'rest_framework',
     'webpack_loader',

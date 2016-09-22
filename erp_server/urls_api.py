@@ -14,6 +14,7 @@ from apps.payment.api import PaymentViewSet
 from apps.product.api import ProductViewSet
 from apps.provider.api import ProviderViewSet
 from apps.stock.api import IOItemResourceStockViewSet, IOProductStockViewSet, ItemResourceStockViewSet, ProductStockViewSet
+from apps.cart.api import NewCartViewSet
 
 router = DefaultRouter(trailing_slash=False)
 
@@ -34,6 +35,7 @@ router.register(r'io-resources-stock', IOItemResourceStockViewSet, base_name='io
 router.register(r'io-products-stock', IOProductStockViewSet, base_name='io-product-stock')
 router.register(r'resources-stock', ItemResourceStockViewSet, base_name='resource-stock')
 router.register(r'products-stock', ProductStockViewSet, base_name='product-stock')
+router.register(r'new-cart', NewCartViewSet, base_name='new-cart')
 
 urlpatterns = [
     url(r'^accounts/', include('rest_auth.urls')),
