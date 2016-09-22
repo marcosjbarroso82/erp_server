@@ -10,6 +10,8 @@ class ProductStockViewSet(viewsets.ModelViewSet):
     """
     queryset = ProductStock.objects.all()
     serializer_class = ProductStockSerializer
+    filter_fields = ('item',)
+    search_fields = ('item__name', 'item__sku')
 
 
 class IOProductStockViewSet(viewsets.ModelViewSet):
@@ -18,6 +20,8 @@ class IOProductStockViewSet(viewsets.ModelViewSet):
     """
     queryset = IOProductStock.objects.all()
     serializer_class = IOProductStockSerializer
+    filter_fields = ('stock',)
+    search_fields = ('stock__item__name', 'stock__item__sku')
 
 
 class ItemResourceStockViewSet(viewsets.ModelViewSet):
@@ -26,6 +30,9 @@ class ItemResourceStockViewSet(viewsets.ModelViewSet):
     """
     queryset = ItemResourceStock.objects.all()
     serializer_class = ItemResourceStockSerializer
+    filter_fields = ('item',)
+    search_fields = ('item__name', 'item__sku')
+
 
 
 class IOItemResourceStockViewSet(viewsets.ModelViewSet):
@@ -34,6 +41,8 @@ class IOItemResourceStockViewSet(viewsets.ModelViewSet):
     """
     queryset = IOItemResourceStock.objects.all()
     serializer_class = IOItemResourceStockSerializer
+    filter_fields = ('stock',)
+    search_fields = ('stock__item__name', 'stock__item__sku')
 
 
 
