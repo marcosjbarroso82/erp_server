@@ -9,3 +9,4 @@ class PaymentViewSet(viewsets.ModelViewSet):
     """
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
+    filter_fields = ('order',)
