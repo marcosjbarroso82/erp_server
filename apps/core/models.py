@@ -10,6 +10,7 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
 class Person(BaseModel):
     first_name = models.CharField(max_length=20)
 
