@@ -17,6 +17,11 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = '__all__'
 
+    def update(self, instance, validated_data):
+        # Exclude items from serializer.
+        validated_data.pop('items')
+        return super().update(instance, validated_data)
+
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
