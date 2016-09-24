@@ -25,17 +25,17 @@ class IOStockBase(BaseModel):
 
 
 class ProductStock(BaseStock):
-    item = models.OneToOneField(Product)
+    item = models.OneToOneField(Product, related_name='stock')
 
 class IOProductStock(IOStockBase):
-    stock = models.ForeignKey(ProductStock)
+    stock = models.ForeignKey(ProductStock, related_name='details')
 
 
 class ItemResourceStock(BaseStock):
-    item = models.OneToOneField(ItemResource)
+    item = models.OneToOneField(ItemResource, related_name='stock')
 
 class IOItemResourceStock(IOStockBase):
-    stock = models.ForeignKey(ItemResourceStock)
+    stock = models.ForeignKey(ItemResourceStock, related_name='details')
 
 
 @receiver(post_save, sender=Product)
