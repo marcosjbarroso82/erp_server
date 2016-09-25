@@ -3,7 +3,7 @@ from django.conf.urls import url, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_jwt.views import obtain_jwt_token
 
-from apps.account_balance.api import BalanceViewSet
+from apps.account_balance.api import BalanceViewSet, TicketViewSet
 from apps.address.api import AddressViewSet
 from apps.client.api import ClientViewSet
 from apps.delivery.api import DeliveryGroupViewSet, DeliveryViewSet, DistributionViewSet
@@ -18,7 +18,8 @@ from apps.cart.api import NewCartViewSet
 
 router = DefaultRouter(trailing_slash=False)
 
-router.register(r'account-balances', BalanceViewSet, base_name='account-balances')
+router.register(r'balances', BalanceViewSet, base_name='account-balances')
+router.register(r'tickets', TicketViewSet, base_name='tickets')
 router.register(r'addresses', AddressViewSet, base_name='addresses')
 router.register(r'clients', ClientViewSet, base_name='clients')
 router.register(r'deliveries', DeliveryViewSet, base_name='deliveries')

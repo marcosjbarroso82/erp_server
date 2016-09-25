@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from apps.core.models import BaseModel
 from apps.order.models import Order
+from apps.account_balance.models import Ticket
 from django.utils import timezone
 
 PAYMENT_TYPE_CHOICES2 = (
@@ -23,3 +24,4 @@ class Payment(BaseModel):
     type = models.CharField(choices=PAYMENT_TYPE_CHOICES, max_length=10)
     order = models.ForeignKey(Order)
     amount = models.DecimalField(decimal_places=2, max_digits=12)
+    ticket = models.OneToOneField(Ticket, null=True)
