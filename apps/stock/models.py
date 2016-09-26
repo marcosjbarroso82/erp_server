@@ -18,7 +18,7 @@ class BaseStock(BaseModel):
 class IOStockBase(BaseModel):
     date = models.DateTimeField(default=timezone.now)
     quantity = models.IntegerField(default=0)
-    note = models.TextField()
+    note = models.TextField(null=True, blank=True)
 
     class Meta:
         abstract = True
