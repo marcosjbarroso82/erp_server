@@ -18,15 +18,15 @@ class Distribution(BaseModel):
 
 
 class DeliveryGroup(BaseModel):
-    order = models.OneToOneField(Order, related_name='delivery_group')
-    status = models.IntegerField(choices=DELIVERY_STATUS_OPTIONS)
-    address = models.ForeignKey(Address, on_delete=models.PROTECT)
+    order = models.ForeignKey(Order, related_name='delivery_groups')
+    status = models.IntegerField(choices=DELIVERY_STATUS_OPTIONS, default=1)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT, null=True)
+    distribution = models.ForeignKey(Distribution, null=True)
 
 
 class Delivery(BaseModel):
     group = models.ForeignKey(DeliveryGroup)
-    status = models.IntegerField(choices=DELIVERY_STATUS_OPTIONS)
     item = models.ForeignKey(OrderItem)
     quantity = models.PositiveIntegerField()
-    distribution = models.ForeignKey(Distribution)
+
 
