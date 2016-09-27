@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import DeliveryGroup, Delivery, Distribution
+from apps.order.serializers import OrderItemSerializer
 
 
 class DistributionSerializer(serializers.ModelSerializer):
@@ -17,6 +18,7 @@ class DeliveryGroupSerializer(serializers.ModelSerializer):
 
 
 class DeliverySerializer(serializers.ModelSerializer):
+    #item = OrderItemSerializer(read_only=True)
 
     class Meta:
         model = Delivery

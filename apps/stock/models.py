@@ -27,6 +27,10 @@ class IOStockBase(BaseModel):
 class ProductStock(BaseStock):
     item = models.OneToOneField(Product, related_name='stock')
 
+    @property
+    def reserved_stock(self):
+        return self.item.reserved_stock
+
 class IOProductStock(IOStockBase):
     stock = models.ForeignKey(ProductStock, related_name='details')
 

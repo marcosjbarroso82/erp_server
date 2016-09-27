@@ -9,3 +9,4 @@ class AddressViewSet(viewsets.ModelViewSet):
     """
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
+    search_fields = ('street',)

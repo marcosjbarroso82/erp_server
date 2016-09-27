@@ -21,6 +21,7 @@ class OrderItemViewSet(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
     filter_fields = ('order',)
+    search_fields = ('product_name', 'product__sku')
 
 
 

@@ -24,3 +24,4 @@ class ItemResourceViewSet(viewsets.ModelViewSet):
     queryset = ItemResource.objects.all()
     serializer_class = ItemResourceSerializer
     filter_class = ItemResourceFilter
+    search_fields = ('name',)

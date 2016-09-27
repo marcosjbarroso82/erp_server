@@ -9,3 +9,4 @@ class ProviderViewSet(viewsets.ModelViewSet):
     """
     queryset = Provider.objects.all()
     serializer_class = ProviderSerializer
+    search_fields = ('name',)

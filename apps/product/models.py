@@ -27,12 +27,8 @@ class Product(BaseModel):
         return self.stock.quantity
 
     def get_reserved_stock(self):
-        reserved = OrderItem.objects.filter(product=self, order__status=1).aggregate(Sum('quantity'))
-        # import ipdb; ipdb.set_trace()
-        if not reserved.get('quantity__sum'):
-            return 0
-        else:
-            return reserved.get('quantity__sum')
+        stock = OrderItem.objects.filter(product=self, order__status=1).aggregate(Sum('quantity')).get('quantity__sum', 0)
+        return stock if stock else 0
 
     def get_available_stock(self):
         return self.get_stock_quantity() - self.get_reserved_stock()

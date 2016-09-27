@@ -17,6 +17,7 @@ class DeliveryViewSet(viewsets.ModelViewSet):
     """
     queryset = Delivery.objects.all()
     serializer_class = DeliverySerializer
+    search_fields = ('item__product_name',)
 
 
 class DistributionViewSet(viewsets.ModelViewSet):

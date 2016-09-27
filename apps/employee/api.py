@@ -9,3 +9,4 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     """
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    search_fields = ('first_name',)
