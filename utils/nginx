@@ -1,0 +1,47 @@
+upstream erp_app_server {
+    server unix:/webapps/erp/erp_server/run/gunicorn.sock fail_timeout=0;
+  }
+
+  server {
+      listen   80;
+      server_name erp.context.com.ar;
+      
+      client_max_body_size 4G;
+
+      access_log /webapps/erp/logs/nginx-access.log;
+      error_log /webapps/erp/logs/nginx-error.log;
+
+      location / {
+	    if ($request_method = 'OPTIONS') {
+	        add_header 'Access-Control-Allow-Credentials' 'true';
+	        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+	        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+	        add_header 'Access-Control-Max-Age' 1728000;
+	        add_header 'Content-Type' 'text/plain charset=UTF-8';
+	        add_header 'Content-Length' 0;
+	        return 204;
+	     }
+	     if ($request_method = 'POST') {
+	        add_header 'Access-Control-Allow-Origin' '*';
+	        add_header 'Access-Control-Allow-Credentials' 'true';
+	        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+	        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+	     }
+	     if ($request_method = 'GET') {
+	        add_header 'Access-Control-Allow-Origin' '*';
+	        add_header 'Access-Control-Allow-Credentials' 'true';
+	        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+	        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+	     }
+
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+          proxy_set_header Host $http_host;
+          proxy_redirect off;
+          if (!-f $request_filename) {
+              proxy_pass http://erp_app_server;
+              break;
+          }
+      }
+
+  }
