@@ -5,25 +5,84 @@ from apps.account_balance.models import Ticket
 
 
 ORDER_STATUS_OPTIONS = (
-    (0, 'canceled'),
+    (0, 'completed'),
     (1, 'pending'),
-    (2, 'completed'),
-    (3, 'delivered'),
-    (4, 'paid'),
+    (2, 'canceled'),
+    (3, 'issued'),
+)
+
+ORDER_PAYMENT_STATUS_OPTIONS = (
+    (0, 'completed'),
+    (1, 'pending'),
+    (2, 'canceled'),
+    (3, 'issued'),
+)
+
+ORDER_DELIVERY_STATUS_OPTIONS = (
+    (0, 'completed'),
+    (1, 'pending'),
+    (2, 'canceled'),
+    (3, 'issued'),
 )
 
 class Order(BaseModel):
     client = models.ForeignKey(Client, related_name='orders')
-    status = models.IntegerField(choices=ORDER_STATUS_OPTIONS)
+    _status = models.IntegerField(choices=ORDER_STATUS_OPTIONS, editable=False)
+    delivery_status = models.IntegerField(choices=ORDER_DELIVERY_STATUS_OPTIONS, default=1)
+    payment_status = models.IntegerField(choices=ORDER_PAYMENT_STATUS_OPTIONS, default=1)
     # Transaction Saved Fields
     total = models.DecimalField(decimal_places=2, max_digits=12, editable=False, default=0)
     ticket = models.OneToOneField(Ticket, null=True)
 
-    def add_item(self, product, quantity, data={}, action='increment'):
-        # TODO: borrar el item si fue modificado
-        # try:
+    @property
+    def status(self):
+        return self._status
 
-        reserved_stock = product.get_available_stock()
+    @status.setter
+    def status(self, value):
+        # import ipdb; ipdb.set_trace()
+        # Cancell Pending Order
+        if self._status == 1 and value == 2:
+            if self.is_delivered or self.is_paid:
+                # Issued Order
+                self._status = 3
+            else:
+                # Cancel Order
+                self._status = 0
+        # Complete Pending Order
+        elif self._status == 1 and value == 0:
+            self.is_delivered = True
+            self.is_paid = True
+            self._status = value
+        else:
+            self._status = value
+        if self.pk:
+            self.save()
+
+    @property
+    def is_delivered(self):
+        return True if self.delivery_status == 0 else False
+
+    @is_delivered.setter
+    def is_delivered(self, value):
+        self.delivery_status = value
+        for order_item in OrderItem.objects.filter(order=self):
+            order_item.consume_stock()
+        self.save()
+
+    @property
+    def is_paid(self):
+        return True if self.payment_status == 0 else False
+
+    @is_paid.setter
+    def is_paid(self, value):
+        # Change only if new status if Paid
+        if value:
+            self.payment_status = 0
+        self.save()
+
+    def add_item(self, product, quantity, data={}, action='increment'):
+        reserved_stock = product.available_stock_quantity
 
         if reserved_stock >= quantity:
             if self.items.filter(product=product).exists():
@@ -33,7 +92,9 @@ class Order(BaseModel):
                 item = OrderItem(order=self, product=product, quantity=quantity, price=product.get_price_per_item())
             item.save()
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
 
+        super().save(force_insert, force_update, using, update_fields)
 
 
 class OrderItem(BaseModel):
@@ -45,6 +106,8 @@ class OrderItem(BaseModel):
     product_name = models.CharField(max_length=20, editable=False)
     price = models.DecimalField(decimal_places=2, max_digits=12, editable=False)
 
+    def consume_stock(self):
+        self.product.stock.consume_stock(quantity=self.quantity, note='order: ' + str(self.order.pk))
 
     def save(self, *args, **kwargs):
         if not self.pk:

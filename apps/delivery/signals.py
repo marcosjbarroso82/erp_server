@@ -11,11 +11,6 @@ def create_delivery_group(sender, **kwargs):
         # import ipdb; ipdb.set_trace()
         delivery_group = DeliveryGroup.objects.create(order=kwargs['instance'])
         print("create_delivery_group " + str(delivery_group.pk))
-    else:
-        import ipdb; ipdb.set_trace()
-    print(20*"*")
-    print(20*"*")
-    print(20*"*")
 
 
 @receiver(post_save, sender=OrderItem)

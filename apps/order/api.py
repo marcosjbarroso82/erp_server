@@ -11,7 +11,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     """
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    filter_fields = ('status', 'client')
+    filter_fields = ('_status', 'client')
 
 
 class OrderItemViewSet(viewsets.ModelViewSet):

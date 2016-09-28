@@ -3,6 +3,8 @@ from apps.product.models import Product
 from apps.core.models import BaseModel
 from apps.item_resource.models import ItemResource
 from django.utils import timezone
+from apps.order.models import OrderItem
+from django.db.models import Sum
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -29,7 +31,15 @@ class ProductStock(BaseStock):
 
     @property
     def reserved_stock(self):
-        return self.item.reserved_stock
+        # TODO: en el futuro se considerar la posibilidad de que una orden este parcialmente enviada
+        stock = OrderItem.objects.filter(product=self.item, order__delivery_status=1).aggregate(Sum('quantity')).get('quantity__sum', 0)
+        return stock if stock else 0
+
+    def consume_stock(self, quantity, note):
+        IOProductStock.objects.create(stock=self, quantity=-quantity, note=note)
+
+    def add_stock(self, quantity, note):
+        IOProductStock.objects.create(stock=self, quantity=quantity, note=note)
 
 class IOProductStock(IOStockBase):
     stock = models.ForeignKey(ProductStock, related_name='details')

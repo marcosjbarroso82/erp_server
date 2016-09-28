@@ -11,11 +11,15 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
+    items = OrderItemSerializer(many=True, required=False)
+    payment_status = serializers.IntegerField(read_only=True)
+    _status = serializers.IntegerField(read_only=True)
+    status = serializers.IntegerField()
 
     class Meta:
         model = Order
         fields = '__all__'
+        # read_only = ['payment_status']
 
     def update(self, instance, validated_data):
         # Exclude items from serializer.

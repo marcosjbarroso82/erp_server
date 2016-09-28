@@ -12,27 +12,22 @@ class Product(BaseModel):
 
 
     @property
-    def reserved_stock(self):
-        return self.get_reserved_stock()
+    def reserved_stock_quantity(self):
+        # import ipdb; ipdb.set_trace()
+        return self.stock.reserved_stock
 
     @property
-    def available_stock(self):
-        return self.get_available_stock()
+    def available_stock_quantity(self):
+        return self.available_stock_quantity
 
     @property
     def stock_quantity(self):
-        return self.get_stock_quantity()
-
-    def get_stock_quantity(self):
         return self.stock.quantity
 
-    def get_reserved_stock(self):
-        stock = OrderItem.objects.filter(product=self, order__status=1).aggregate(Sum('quantity')).get('quantity__sum', 0)
-        return stock if stock else 0
-
-    def get_available_stock(self):
-        return self.get_stock_quantity() - self.get_reserved_stock()
+    @property
+    def available_stock_quantity(self):
+        return self.stock_quantity - self.reserved_stock_quantity
 
     def get_price_per_item(self):
-        return 7
+        return self.price
 
