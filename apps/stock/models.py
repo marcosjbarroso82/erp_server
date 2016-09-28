@@ -1,5 +1,5 @@
 from django.db import models
-from apps.product.models import Product
+from apps.product.models import ProductVariant
 from apps.core.models import BaseModel
 from apps.item_resource.models import ItemResource
 from django.utils import timezone
@@ -25,7 +25,7 @@ class IOStockBase(BaseModel):
 
 
 class ProductStock(BaseStock):
-    item = models.OneToOneField(Product, related_name='stock')
+    item = models.OneToOneField(ProductVariant, related_name='stock')
 
     @property
     def reserved_stock(self):
@@ -42,10 +42,10 @@ class IOItemResourceStock(IOStockBase):
     stock = models.ForeignKey(ItemResourceStock, related_name='details')
 
 
-@receiver(post_save, sender=Product)
+@receiver(post_save, sender=ProductVariant)
 def product_post_save(sender, *args, **kwargs):
     """
-        When create product then create stock
+        When create product variant then create stock
     """
     if kwargs['created']:
         ProductStock(item=kwargs['instance']).save()

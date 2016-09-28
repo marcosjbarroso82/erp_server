@@ -38,7 +38,7 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.PROTECT)
-    product = models.ForeignKey('product.Product', on_delete=models.PROTECT)
+    product = models.ForeignKey('product.ProductVariant', on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField()
 
     # Transaction Saved Fields
