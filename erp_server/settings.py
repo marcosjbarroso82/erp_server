@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
     'corsheaders',
+    'storages',
     ]
 
 # MIDDLEWARE = [
@@ -154,12 +155,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-STATIC_URL = '/static/'
-
-
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework.filters.DjangoFilterBackend',
@@ -205,3 +200,26 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Config to manager static files on AWS
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY', 'AKIAIYERTNTJTCBC7DCA')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_KEY', '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')
+
+
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_MEDIA_BUCKET_NAME = os.environ.get('AWS_MEDIA_BUCKET_NAME', 'zappa-e5he50k3o')
+AWS_QUERYSTRING_AUTH = False
+
+if AWS_STORAGE_BUCKET_NAME:
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+if AWS_MEDIA_BUCKET_NAME:
+    DEFAULT_FILE_STORAGE = 'ecommerce.core.storages.S3MediaStorage'
+    THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE

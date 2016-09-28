@@ -7,6 +7,7 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+        read_only_fields = ('slug', )
 
 class ProductImageSerializer(serializers.ModelSerializer):
 
@@ -27,7 +28,7 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     #variantions = ProductVariantSerializer(many=True)
-    images = ProductImageSerializer(many=True)
+    images = ProductImageSerializer(many=True, required=False, read_only=True)
 
     class Meta:
         model = Product
