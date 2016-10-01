@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Payment
+from .models import Payment, PAYMENT_STATUS_CHOICES
 
 
 class PaymentSerializer(serializers.ModelSerializer):

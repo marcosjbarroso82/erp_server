@@ -4,7 +4,7 @@ from .models import ProductStock, IOProductStock, ItemResourceStock, IOItemResou
 
 class ProductStockSerializer(serializers.ModelSerializer):
     product_name = serializers.SerializerMethodField()
-    reserved_stock = serializers.FloatField(read_only=True)
+    reserved_stock = serializers.IntegerField(read_only=True)
 
     def get_product_name(self, obj):
         return obj.item.name

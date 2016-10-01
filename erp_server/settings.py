@@ -111,14 +111,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'erp_server.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         }
+# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'erp',
+        'USER': 'erp',
+        'PASSWORD': 'laserjet1',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
 }
 
 

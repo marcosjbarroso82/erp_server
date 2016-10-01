@@ -1,15 +1,14 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from apps.core.models import BaseModel
-from apps.order.models import Order
 from apps.account_balance.models import Ticket
 from django.utils import timezone
+from django.db import transaction
 
-PAYMENT_TYPE_CHOICES2 = (
-    ('cash', _('cash')),
-    ('check', _('cheque')),
-    ('credit_card', _('credit card')),
-    ('transder', _('transfer'))
+PAYMENT_STATUS_CHOICES = (
+    (0, 'Canceled'),
+    (1, 'Pending'),
+    (2, 'Payed')
 )
 
 PAYMENT_TYPE_CHOICES = (
@@ -21,7 +20,34 @@ PAYMENT_TYPE_CHOICES = (
 
 class Payment(BaseModel):
     date = models.DateTimeField(default=timezone.now)
-    type = models.CharField(choices=PAYMENT_TYPE_CHOICES, max_length=10)
-    order = models.ForeignKey(Order)
+    type = models.CharField(choices=PAYMENT_TYPE_CHOICES, max_length=15)
+    order = models.ForeignKey('order.Order', related_name='payments')
     amount = models.DecimalField(decimal_places=2, max_digits=12)
     ticket = models.OneToOneField(Ticket, null=True)
+    status = models.IntegerField(default=1, choices=PAYMENT_STATUS_CHOICES)
+
+    def __init__(self, *args, **kwargs):
+        super(Payment, self).__init__(*args, **kwargs)
+        self._status = self.status if self.status else 1
+
+    def __str__(self):
+        return "#%s , %s" %(self.id, self.get_status_display())
+
+    def change_status(self):
+        with transaction.atomic():
+            if self.status == 2 and self._status == 1: # pending to payed
+                self._status = self.status
+                self.save()
+                self.order.check_payed() # Check order if all payed
+            elif self.status == 0 and self._status == 2: # payed to cancel
+                # TODO: Cambiar la orden
+                pass
+            else:
+                self._status = self.status
+                self.save()
+
+    def save(self, *args, **kwargs):
+        if self._status != self.status:
+            self.change_status()
+        else:
+            super(Payment, self).save(*args, **kwargs)

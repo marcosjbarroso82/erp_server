@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import OrderItem, Order
+from .models import OrderItem, Order, ORDER_STATUS_OPTIONS
+from django.db import transaction
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -16,6 +17,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
+        read_only_fields = ('delivered', 'payed', 'total')
 
     def update(self, instance, validated_data):
         # Exclude items from serializer.
@@ -23,9 +25,10 @@ class OrderSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     def create(self, validated_data):
-        items_data = validated_data.pop('items')
-        order = Order.objects.create(**validated_data)
-        for item_data in items_data:
-            # OrderItem.objects.create(order=order, **item_data)
-            order.add_item(**item_data)
-        return order
+        with transaction.atomic():
+            items_data = validated_data.pop('items')
+            order = Order.objects.create(**validated_data)
+            for item_data in items_data:
+                # OrderItem.objects.create(order=order, **item_data)
+                order.add_item(**item_data)
+            return order

@@ -17,9 +17,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
-    #reserved_stock = serializers.FloatField(read_only=True)
-    #available_stock = serializers.FloatField(read_only=True)
-    stock_quantity = serializers.FloatField(read_only=True)
+    stock_quantity = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ProductVariant

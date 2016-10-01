@@ -6,6 +6,9 @@ from django.utils import timezone
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from apps.order.models import OrderItem
+from apps.delivery.models import Delivery
+from django.db.models import Sum
 
 
 class BaseStock(BaseModel):
@@ -29,7 +32,23 @@ class ProductStock(BaseStock):
 
     @property
     def reserved_stock(self):
-        return self.item.reserved_stock
+        #import pdb; pdb.set_trace()
+        stock = OrderItem.objects.filter(product=self.item, order__status=1).aggregate(Sum('quantity')).get('quantity__sum', 0)
+        quantity = stock if stock else 0
+        stock_delivered_to_order_pending = Delivery.objects.filter(item__product=self.item, group__status=2).aggregate(Sum('quantity')).get('quantity__sum', 0)
+        quantity -= stock_delivered_to_order_pending if stock_delivered_to_order_pending else 0
+        return quantity
+
+    @property
+    def available_stock(self):
+        return self.quantity - self.reserved_stock
+
+    def consume_stock(self, quantity, note):
+        IOProductStock.objects.create(stock=self, quantity=-quantity, note=note)
+
+    def add_stock(self, quantity, note):
+        IOProductStock.objects.create(stock=self, quantity=quantity, note=note)
+
 
 class IOProductStock(IOStockBase):
     stock = models.ForeignKey(ProductStock, related_name='details')

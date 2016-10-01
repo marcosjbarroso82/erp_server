@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import DeliveryGroup, Delivery, Distribution
+from .models import DeliveryGroup, Delivery, Distribution, DELIVERY_STATUS_OPTIONS
 from apps.order.serializers import OrderItemSerializer
 
 
@@ -8,6 +8,7 @@ class DistributionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Distribution
         fields = '__all__'
+
 
 
 class DeliveryGroupSerializer(serializers.ModelSerializer):
