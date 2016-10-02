@@ -5,6 +5,8 @@ from apps.product.models import ProductVariant
 from decimal import Decimal
 from apps.delivery.models import DeliveryGroup, Delivery
 
+from apps.payment.models import Payment
+
 
 class OrderTestCase(TestCase):
     fixtures = ['db.json', ]
@@ -92,5 +94,56 @@ class OrderTestCase(TestCase):
 
         self.assertIs(order.delivered, True)
 
-    def test_order_payed(self):
-        pass
+    def test_order_payed_one_payment(self):
+        q = 2 # Quantity
+        p = ProductVariant.objects.get(pk=1) # Product
+        order = Order.objects.create(client=self.get_client(), status=1)
+        order.add_item(p, q)
+
+        # One payment created with status payed
+        payment1 = Payment.objects.create(type='cash', order=order, amount=Decimal(p.price * q), status=2)
+        self.assertIs(Order.objects.get(pk=order.pk).payed, True)
+
+        # Cancel payment 1
+        payment1.status = 0
+        payment1.save()
+
+        self.assertIs(order.payed, False)
+
+        # One payment created with status pending
+        payment2 = Payment.objects.create(type='cash', order=order, amount=Decimal(p.price * q), status=1)
+        self.assertIs(order.payed, False)
+
+        # Payed payment 2
+        payment2.status = 2
+        payment2.save()
+
+        self.assertIs(order.payed, True)
+
+
+    def test_order_payed_some_payment(self):
+        q = 2 # Quantity
+        p = ProductVariant.objects.get(pk=1) # Product
+        order = Order.objects.create(client=self.get_client(), status=1)
+        order.add_item(p, q)
+        qp = 2 # Quantity payments
+        for i in range(qp):
+            Payment.objects.create(type='cash', order=order, amount=Decimal(p.price * q / qp), status=1)
+
+        self.assertIs(order.payed, False)
+
+        payment1 = order.payments.first()
+
+        # Payed payment 1
+        payment1.status = 2
+        payment1.save()
+
+        self.assertIs(order.payed, False)
+
+        payment2 = order.payments.last()
+
+        # Payed payment 2
+        payment2.status = 2
+        payment2.save()
+
+        self.assertIs(order.payed, True)

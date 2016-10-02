@@ -29,13 +29,17 @@ class Payment(BaseModel):
     def __init__(self, *args, **kwargs):
         super(Payment, self).__init__(*args, **kwargs)
         self._status = self.status if self.status else 1
+        # This need when using manager for created objetcs
+        # Ex: Payment.objects.create()
+        self.changed = True if self.pk else False
 
     def __str__(self):
         return "#%s , %s" %(self.id, self.get_status_display())
 
     def change_status(self):
+        self.changed = True
         with transaction.atomic():
-            if self.status == 2 and self._status == 1: # pending to payed
+            if self.status == 2: # payed
                 self._status = self.status
                 self.save()
                 self.order.check_payed() # Check order if all payed
@@ -49,7 +53,7 @@ class Payment(BaseModel):
                 self.save()
 
     def save(self, *args, **kwargs):
-        if self._status != self.status:
+        if self._status != self.status or not self.changed:
             self.change_status()
         else:
             super(Payment, self).save(*args, **kwargs)
