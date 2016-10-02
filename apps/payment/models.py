@@ -40,8 +40,10 @@ class Payment(BaseModel):
                 self.save()
                 self.order.check_payed() # Check order if all payed
             elif self.status == 0 and self._status == 2: # payed to cancel
-                # TODO: Cambiar la orden
-                pass
+                # TODO: ¿Que pasa aca? Aparte de cambiar la orden de estado
+                self._status = self.status
+                self.save()
+                self.order.check_payed() # Check order if all payed
             else:
                 self._status = self.status
                 self.save()

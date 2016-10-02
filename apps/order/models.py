@@ -75,6 +75,9 @@ class Order(BaseModel):
             else:
                 item = OrderItem(order=self, product=product, quantity=quantity, price=product.get_price_per_item())
             item.save()
+            return item
+        else:
+            return None
 
     def save(self, *args, **kwargs):
         if self._status != self.status:
