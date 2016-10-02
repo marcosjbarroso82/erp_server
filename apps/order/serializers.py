@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import OrderItem, Order, ORDER_STATUS_OPTIONS
 from django.db import transaction
 
+from apps.core.serializers import BaseModelSerializer
+
 
 class OrderItemSerializer(serializers.ModelSerializer):
 
@@ -11,13 +13,21 @@ class OrderItemSerializer(serializers.ModelSerializer):
         read_only_fields = ('order',)
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
+class OrderSerializer(BaseModelSerializer):
+    #items = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
         fields = '__all__'
         read_only_fields = ('delivered', 'payed', 'total')
+        fields_config = {
+            'update': {
+                'fields': ('status',)
+            },
+            'partial_update': {
+                'fields': ('status',)
+            }
+        }
 
     def update(self, instance, validated_data):
         # Exclude items from serializer.
