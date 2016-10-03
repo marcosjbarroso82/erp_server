@@ -1,5 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
+AVAILABLE_CONFIGS_FIELD = ('fields', 'read_only_fields', 'exclude', 'write_only_fields')
+
 
 class BaseModelSerializer(ModelSerializer):
 
@@ -12,20 +14,11 @@ class BaseModelSerializer(ModelSerializer):
             if fields_config and fields_config.get(action):
                 custom_fields_by_action = fields_config.get(action)
 
-                if custom_fields_by_action.get('fields'):
-                    self.Meta.fields = custom_fields_by_action.get('fields')
+                for key, value in custom_fields_by_action.items():
+                    assert key in AVAILABLE_CONFIGS_FIELD, "The %s can't support" % key
+                    setattr(self.Meta, key, value)
 
-                if custom_fields_by_action.get('read_only_fields'):
-                    self.Meta.read_only_fields = custom_fields_by_action.get('read_only_fields')
-
-                if custom_fields_by_action.get('exclude'):
-                    self.Meta.exclude = custom_fields_by_action.get('exclude')
-
-                if custom_fields_by_action.get('write_only_fields'):
-                    self.Meta.write_only_fields = custom_fields_by_action.get('write_only_fields')
         super(BaseModelSerializer, self).__init__(*args, **kwargs)
-
-
 
     class Meta:
         abstract = True
