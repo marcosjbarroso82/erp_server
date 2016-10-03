@@ -3,8 +3,13 @@ import django_filters
 from rest_framework import filters
 from rest_framework import viewsets
 
-from .models import Product, ProductVariant, Category
-from .serializers import ProductSerializer, ProductVariantSerializer, CategorySerializer
+from .models import Product, ProductVariant, Category, ProductImage
+from .serializers import ProductSerializer, ProductVariantSerializer, CategorySerializer, CustomProductImageSerializer
+
+
+class CustomProductImageViewSet(viewsets.ModelViewSet):
+    serializer_class = CustomProductImageSerializer
+    queryset = ProductImage.objects.all()
 
 
 

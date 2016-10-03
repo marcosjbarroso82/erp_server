@@ -234,5 +234,5 @@ if AWS_STORAGE_BUCKET_NAME:
     STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 if AWS_MEDIA_BUCKET_NAME:
-    DEFAULT_FILE_STORAGE = 'ecommerce.core.storages.S3MediaStorage'
+    DEFAULT_FILE_STORAGE = 'apps.core.storages.S3MediaStorage'
     THUMBNAIL_DEFAULT_STORAGE = DEFAULT_FILE_STORAGE

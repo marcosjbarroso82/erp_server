@@ -11,7 +11,7 @@ from apps.employee.api import EmployeeViewSet
 from apps.item_resource.api import ItemResourceViewSet
 from apps.order.api import OrderItemViewSet, OrderViewSet
 from apps.payment.api import PaymentViewSet
-from apps.product.api import ProductViewSet, ProductVariantViewSet, CategoryViewSet
+from apps.product.api import ProductViewSet, ProductVariantViewSet, CategoryViewSet, CustomProductImageViewSet
 from apps.provider.api import ProviderViewSet
 from apps.stock.api import IOItemResourceStockViewSet, IOProductStockViewSet, ItemResourceStockViewSet, ProductStockViewSet
 from apps.cart.api import NewCartViewSet
@@ -31,6 +31,7 @@ router.register(r'orders', OrderViewSet, base_name='orders')
 router.register(r'order-items', OrderItemViewSet, base_name='order-item')
 router.register(r'payments', PaymentViewSet, base_name='payments')
 router.register(r'products', ProductViewSet, base_name='products')
+router.register(r'products-images', CustomProductImageViewSet, base_name='products-images')
 router.register(r'products-variants', ProductVariantViewSet, base_name='products-variants')
 router.register(r'categories', CategoryViewSet, base_name='categories')
 router.register(r'providers', ProviderViewSet, base_name='providers')
