@@ -193,6 +193,7 @@ APPEND_SLASH = False
 import datetime
 JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=300),
+    'JWT_ALLOW_REFRESH': True
     }
 
 

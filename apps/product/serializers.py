@@ -14,7 +14,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProductImage
-        fields = '__all__'
+        exclude = ('deleted', )
+        read_only_fields = ('default', )
 
 
 class ProductVariantSerializer(serializers.ModelSerializer):
@@ -32,14 +33,3 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-
-
-class CustomProductImageSerializer(serializers.ModelSerializer):
-    file = serializers.ImageField(source='image')
-    data = serializers.PrimaryKeyRelatedField(source='product', queryset=Product.objects.all(), write_only=True)
-
-    class Meta:
-        model = ProductImage
-        fields = ('file', 'data', 'image', 'product')
-        read_only_fields = ('image', 'product')
-        write_only_fields = ('data', 'file')

@@ -18,7 +18,7 @@ ORDER_STATUS_OPTIONS = (
 
 class Order(BaseModel):
     client = models.ForeignKey(Client, related_name='orders')
-    status = models.IntegerField(choices=ORDER_STATUS_OPTIONS)
+    status = models.IntegerField(choices=ORDER_STATUS_OPTIONS, default=1)
     # Transaction Saved Fields
     total = models.DecimalField(decimal_places=2, max_digits=12, editable=False, default=0)
     ticket = models.OneToOneField(Ticket, null=True)

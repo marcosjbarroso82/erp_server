@@ -3,6 +3,7 @@ from apps.core.models import BaseModel
 
 import itertools
 from django.template.defaultfilters import slugify
+from django.db import transaction
 
 
 class Category(BaseModel):
@@ -60,4 +61,22 @@ class ProductVariant(BaseModel):
 
 class ProductImage(BaseModel):
     image = models.ImageField(upload_to='product')
+    default = models.BooleanField(default=False)
     product = models.ForeignKey(Product, related_name='images')
+
+    def set_default(self):
+        with transaction.atomic():
+            for image in ProductImage.objects.filter(default=True, product=self.product).exclude(pk=self.pk):
+                image.default = False
+                image.save()
+
+            self.default = True
+            self.save()
+
+    def save(self, *args, **kwargs):
+        if not ProductImage.objects.filter(product=self.product).count():
+            self.default = True
+        return super(ProductImage, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-default', 'created_at']
